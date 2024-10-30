@@ -1,10 +1,11 @@
 package com.centralserver.servercentral.services;
 
 import com.centralserver.servercentral.models.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface BankingServices {
+public interface BankingService {
     Customer createNewCustomer(Customer customer);
 
     Customer getCustomerByLastNameAndFirstName(String lastName, String firstName);
