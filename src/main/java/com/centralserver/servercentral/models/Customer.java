@@ -8,8 +8,8 @@ import java.util.Date;
 public class Customer {
     private Long customerId;
     private String subjectCode;
-    private String name;
-    private String surName;
+    private String lastname;
+    private String firstname;
     private String email;
     private String phone;
     private Date birthDate;

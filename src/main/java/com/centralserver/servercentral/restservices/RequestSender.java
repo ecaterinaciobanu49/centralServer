@@ -9,8 +9,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import static com.centralserver.servercentral.constants.HttpConstants.LOCALHOST;
-import static com.centralserver.servercentral.constants.HttpConstants.POST_CUSTOMER;
+import static com.centralserver.servercentral.constants.HttpConstants.*;
 
 public class RequestSender {
 
@@ -30,6 +29,20 @@ public class RequestSender {
         System.out.println(response.statusCode());
         System.out.println(response.body());
 
+        return objectMapper.readValue(response.body(), Customer.class);
+    }
+
+    public static Customer getCustomerBySubjectCode(String subjectCode, String port) throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(LOCALHOST + port + GET_CUSTOMER_BY_CUSTOMER_CODE + subjectCode))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
         return objectMapper.readValue(response.body(), Customer.class);
     }
 
