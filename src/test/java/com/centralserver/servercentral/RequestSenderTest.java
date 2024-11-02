@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
 
 import java.io.IOException;
 
@@ -23,6 +22,7 @@ public class RequestSenderTest {
             "}\n";
 
     private static final String CUSTOMER_CODE = "CUST99887";
+    private static final String NEW_EMAIL = "michaelwilliams1@example.com";
     @Test
     public void testAddNewCustomer() throws IOException, InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -37,5 +37,13 @@ public class RequestSenderTest {
         Customer customer = RequestSender.getCustomerBySubjectCode(CUSTOMER_CODE, "8080");
 
         Assertions.assertEquals("Michael", customer.getFirstname());
+    }
+
+    @Test
+    public void testEditCustomerEmail() throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Customer customer = RequestSender.editCustomerEmail(CUSTOMER_CODE, NEW_EMAIL,"8080");
+
+        Assertions.assertEquals(NEW_EMAIL, customer.getEmail());
     }
 }

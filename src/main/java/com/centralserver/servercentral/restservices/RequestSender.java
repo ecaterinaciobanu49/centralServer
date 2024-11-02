@@ -46,5 +46,31 @@ public class RequestSender {
         return objectMapper.readValue(response.body(), Customer.class);
     }
 
+    public static Customer editCustomerEmail(String subjectCode, String newEmail, String port) throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.ofString(newEmail))
+                .uri(URI.create(LOCALHOST + port + PUT_CUSTOMER_EMAIL + subjectCode))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+        return objectMapper.readValue(response.body(), Customer.class);
+    }
+
+    public void deleteCustomer(String subjectCode, String port) throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .DELETE()
+                .uri(URI.create(LOCALHOST + port + DELETE_CUSTOMER + subjectCode))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+    }
 
 }
