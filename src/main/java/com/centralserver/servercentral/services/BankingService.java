@@ -8,8 +8,6 @@ import java.util.List;
 public interface BankingService {
     Customer createNewCustomer(Customer customer);
 
-    Customer getCustomerByLastNameAndFirstName(String lastName, String firstName);
-
     Customer getCustomerBySubjectCode(String subjectCode);
 
     Customer editCustomerEmail(String subjectCode, String newEmail);

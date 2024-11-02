@@ -19,11 +19,6 @@ public class MainController {
         return bankingService.createNewCustomer(customer);
     }
 
-    @GetMapping("/findCustomerByLastNameAndFirstName")
-    Customer getCustomerByLastNameAndFirstName(@RequestBody String lastName, @RequestBody String firstName) {
-        return bankingService.getCustomerByLastNameAndFirstName(lastName, firstName);
-    }
-
     @GetMapping("/findCustomerBySubjectCode/{subjectCode}")
     Customer getCustomerBySubjectCode(@PathVariable String subjectCode) {
         return bankingService.getCustomerBySubjectCode(subjectCode);

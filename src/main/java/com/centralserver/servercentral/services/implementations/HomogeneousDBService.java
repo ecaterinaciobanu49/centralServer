@@ -13,10 +13,6 @@ public class HomogeneousDBService implements BankingService {
         return null;
     }
 
-    @Override
-    public Customer getCustomerByLastNameAndFirstName(String lastName, String firstName) {
-        return null;
-    }
 
     @Override
     public Customer getCustomerBySubjectCode(String subjectCode) {
