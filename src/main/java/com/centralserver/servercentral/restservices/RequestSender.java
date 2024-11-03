@@ -3,6 +3,7 @@ package com.centralserver.servercentral.restservices;
 import com.centralserver.servercentral.models.Account;
 import com.centralserver.servercentral.models.Customer;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 
 import static com.centralserver.servercentral.constants.HttpConstants.*;
 
@@ -91,4 +93,59 @@ public class RequestSender {
         return objectMapper.readValue(response.body(), Account.class);
     }
 
+    public static List<Account> getAllAccountsBySubjectCode(String subjectCode, String port) throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(LOCALHOST + port + GET_ACCOUNTS_BY_CUSTOMER_CODE + subjectCode))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), new TypeReference<List<Account>>() {});
+    }
+
+    public static Account getAccountByAccountNumber(String accountNumber, String port) throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(LOCALHOST + port + GET_ACCOUNT_BY_NUMBER + accountNumber))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), Account.class);
+    }
+
+    public static Account updateAccountBalance(String accountNumber, Double balance, String port) throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.ofString(String.valueOf(balance)))
+                .uri(URI.create(LOCALHOST + port + PUT_ACCOUNT_BALANCE + accountNumber))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), Account.class);
+    }
+
+    public static void closeAccount(String accountNumber, String port) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.noBody())
+                .uri(URI.create(LOCALHOST + port + PUT_CLOSE_ACCOUNT + accountNumber))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+    }
 }

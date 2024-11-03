@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.util.List;
 
 @SpringBootTest
 public class RequestSenderTest {
@@ -27,6 +28,7 @@ public class RequestSenderTest {
     private static final String CUSTOMER_CODE = "CUST99887";
     private static final String NEW_EMAIL = "michaelwilliams1@example.com";
     private static final String ACCOUNT_NUMBER = "ACCOUNT12";
+    private static final String PORT = "8080";
     @Test
     public void testAddNewCustomer() throws IOException, InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -59,5 +61,35 @@ public class RequestSenderTest {
         Account savedAccount = RequestSender.addNewAccount(account, "8080");
 
         Assertions.assertEquals(savedAccount.getAccountNumber(), ACCOUNT_NUMBER);
+    }
+
+    @Test
+    public void testGetAllAccountsBySubjectCode () throws IOException, InterruptedException {
+        List<Account> accounts = RequestSender.getAllAccountsBySubjectCode(CUSTOMER_CODE, PORT);
+
+        Assertions.assertEquals(4, accounts.size());
+    }
+
+    @Test
+    public void testGetAccountByAccountNumber () throws IOException, InterruptedException {
+        Account account = RequestSender.getAccountByAccountNumber(ACCOUNT_NUMBER, PORT);
+
+        Assertions.assertEquals(0d, account.getBalance());
+    }
+
+    @Test
+    public void testUpdateAccountBalance() throws IOException, InterruptedException {
+        Account savedAccount = RequestSender.updateAccountBalance(ACCOUNT_NUMBER, 1500d, PORT);
+
+        Assertions.assertEquals(1500d, savedAccount.getBalance());
+    }
+
+    @Test
+    public void testCloseAccount() throws IOException, InterruptedException {
+        RequestSender.closeAccount(ACCOUNT_NUMBER, PORT);
+
+        Account savedAccount = RequestSender.getAccountByAccountNumber(ACCOUNT_NUMBER, PORT);
+
+        Assertions.assertEquals(savedAccount.getStatus(), Status.CLOSED);
     }
 }

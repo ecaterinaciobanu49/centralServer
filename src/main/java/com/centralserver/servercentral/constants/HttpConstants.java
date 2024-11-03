@@ -10,5 +10,9 @@ public class HttpConstants {
     public static final String DELETE_CUSTOMER = "/deleteCustumer/";
     public static final String POST_CARD = "/createNewCard";
     public static final String POST_ACCOUNT = "/addNewAccount";
+    public static final String GET_ACCOUNTS_BY_CUSTOMER_CODE = "/getAccountsBySubjcetCode/";
+    public static final String GET_ACCOUNT_BY_NUMBER = "/getAnAccountByAccountNumber/";
+    public static final String PUT_ACCOUNT_BALANCE = "/updateAccountBalance/";
+    public static final String PUT_CLOSE_ACCOUNT = "/closeAccount/";
 
 }
