@@ -1,6 +1,8 @@
 package com.centralserver.servercentral.restservices;
 
+import com.centralserver.servercentral.models.Account;
 import com.centralserver.servercentral.models.Customer;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -71,6 +73,22 @@ public class RequestSender {
 
         HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    public static Account addNewAccount(Account account, String port) throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(account);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .uri(URI.create(LOCALHOST + port + POST_ACCOUNT))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), Account.class);
     }
 
 }

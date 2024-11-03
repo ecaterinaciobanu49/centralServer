@@ -1,6 +1,9 @@
 package com.centralserver.servercentral;
 
+import com.centralserver.servercentral.models.Account;
+import com.centralserver.servercentral.models.AccountType;
 import com.centralserver.servercentral.models.Customer;
+import com.centralserver.servercentral.models.Status;
 import com.centralserver.servercentral.restservices.RequestSender;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -23,6 +26,7 @@ public class RequestSenderTest {
 
     private static final String CUSTOMER_CODE = "CUST99887";
     private static final String NEW_EMAIL = "michaelwilliams1@example.com";
+    private static final String ACCOUNT_NUMBER = "ACCOUNT12";
     @Test
     public void testAddNewCustomer() throws IOException, InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -45,5 +49,15 @@ public class RequestSenderTest {
         Customer customer = RequestSender.editCustomerEmail(CUSTOMER_CODE, NEW_EMAIL,"8080");
 
         Assertions.assertEquals(NEW_EMAIL, customer.getEmail());
+    }
+
+    @Test
+    public void testAddAccount() throws IOException, InterruptedException {
+        Account account = new Account(ACCOUNT_NUMBER, AccountType.CHECKING, 0d,
+                Status.ACTIVE, RequestSender.getCustomerBySubjectCode(CUSTOMER_CODE, "8080"));
+
+        Account savedAccount = RequestSender.addNewAccount(account, "8080");
+
+        Assertions.assertEquals(savedAccount.getAccountNumber(), ACCOUNT_NUMBER);
     }
 }
