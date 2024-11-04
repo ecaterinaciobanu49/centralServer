@@ -1,9 +1,6 @@
 package com.centralserver.servercentral;
 
-import com.centralserver.servercentral.models.Account;
-import com.centralserver.servercentral.models.AccountType;
-import com.centralserver.servercentral.models.Customer;
-import com.centralserver.servercentral.models.Status;
+import com.centralserver.servercentral.models.*;
 import com.centralserver.servercentral.restservices.RequestSender;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -11,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -91,5 +89,28 @@ public class RequestSenderTest {
         Account savedAccount = RequestSender.getAccountByAccountNumber(ACCOUNT_NUMBER, PORT);
 
         Assertions.assertEquals(savedAccount.getStatus(), Status.CLOSED);
+    }
+
+    @Test
+    public void testAddNewTransaction() throws IOException, InterruptedException {
+        Account savedAccount = RequestSender.getAccountByAccountNumber(ACCOUNT_NUMBER, PORT);
+        Transaction transaction = new Transaction(1000d, new Date(), TransactionType.TRANSFER, savedAccount);
+        Transaction savedTransaction = RequestSender.addNewTransaction(transaction, PORT);
+
+        Assertions.assertEquals(savedTransaction.getTransactionType(), TransactionType.TRANSFER);
+    }
+
+    @Test
+    public void testGetAllTransactionByAccountId() throws IOException, InterruptedException {
+        List<Transaction> transactions = RequestSender.getAllTransactionByAccountId(4L, PORT);
+
+        Assertions.assertEquals(1, transactions.size());
+    }
+
+    @Test
+    public void testGetTransactionById() throws IOException, InterruptedException {
+        Transaction transaction = RequestSender.getTransactionById(1L, PORT);
+
+        Assertions.assertNotNull(transaction);
     }
 }

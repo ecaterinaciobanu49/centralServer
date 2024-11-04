@@ -14,5 +14,8 @@ public class HttpConstants {
     public static final String GET_ACCOUNT_BY_NUMBER = "/getAnAccountByAccountNumber/";
     public static final String PUT_ACCOUNT_BALANCE = "/updateAccountBalance/";
     public static final String PUT_CLOSE_ACCOUNT = "/closeAccount/";
+    public static final String POST_TRANSACTION = "/addTransaction";
+    public static final String GET_TRANSACTION_BY_ACCOUNT = "/getAllTransactionByAccountId/";
+    public static final String GET_TRANSACTION_BY_ID = "/getTransactionByTransactionId/";
 
 }
