@@ -1,9 +1,6 @@
 package com.centralserver.servercentral.restservices;
 
-import com.centralserver.servercentral.models.Account;
-import com.centralserver.servercentral.models.Customer;
-import com.centralserver.servercentral.models.Loan;
-import com.centralserver.servercentral.models.Transaction;
+import com.centralserver.servercentral.models.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -240,11 +237,52 @@ public class RequestSender {
     public static void closeLoan(Long loanId, String port) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .PUT(HttpRequest.BodyPublishers.noBody())
-                .uri(URI.create(LOCALHOST + port + PUT_LOAN_AMOUNT + loanId))
+                .uri(URI.create(LOCALHOST + port + PUT_LOAN_CLOSE + loanId))
                 .header("Content-Type", "application/json")
                 .build();
 
         HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    public static Card addNewCard(Card card, String port) throws IOException, InterruptedException {
+        String requestBody = objectMapper.writeValueAsString(card);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .uri(URI.create(LOCALHOST + port + POST_CARD))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), Card.class);
+    }
+
+    public static List<Card> getCardsBySubjectCode(String subjectCode, String port) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(LOCALHOST + port + GET_CARDS_BY_CUSTOMER + subjectCode))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), new TypeReference<List<Card>>() {});
+    }
+
+    public static Card getCardById(Long cardId, String port) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(LOCALHOST + port + GET_CARD_BY_ID + cardId))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), Card.class);
     }
 }

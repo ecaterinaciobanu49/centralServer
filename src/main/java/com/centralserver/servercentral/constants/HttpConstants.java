@@ -22,5 +22,7 @@ public class HttpConstants {
     public static final String GET_LOAN_BY_ID = "/getLoanById/";
     public static final String PUT_LOAN_AMOUNT = "/updateAmount/";
     public static final String PUT_LOAN_CLOSE = "/closeLoan/";
+    public static final String GET_CARDS_BY_CUSTOMER = "/getCardsBySubjectCode/";
+    public static final String GET_CARD_BY_ID = "/cards/";
 
 }

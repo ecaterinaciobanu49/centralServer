@@ -28,6 +28,7 @@ public class RequestSenderTest {
     private static final String NEW_EMAIL = "michaelwilliams1@example.com";
     private static final String ACCOUNT_NUMBER = "ACCOUNT12";
     private static final String PORT = "8080";
+    private static final String CARD_NUMBER = "1234567898765412";
     @Test
     public void testAddNewCustomer() throws IOException, InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -154,5 +155,32 @@ public class RequestSenderTest {
         Loan loan = RequestSender.getLoanById(1L, PORT);
 
         Assertions.assertEquals(LoanStatus.CLOSED, loan.getStatus());
+    }
+
+    @Test
+    public void testAddNewCard() throws IOException, InterruptedException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.YEAR, 5);
+        Customer customer = RequestSender.getCustomerBySubjectCode(CUSTOMER_CODE, PORT);
+        Card card = new Card(CARD_NUMBER, calendar.getTime(), "123", customer);
+
+        Card savedCart = RequestSender.addNewCard(card, PORT);
+
+        Assertions.assertNotNull(savedCart);
+    }
+
+    @Test
+    public void testGetCardsBySubjectCode() throws IOException, InterruptedException {
+        List<Card> cards = RequestSender.getCardsBySubjectCode(CUSTOMER_CODE, PORT);
+
+        Assertions.assertEquals(2, cards.size());
+    }
+
+    @Test
+    public void testGetCardById() throws IOException, InterruptedException {
+        Card card = RequestSender.getCardById(1L, PORT);
+
+        Assertions.assertNotNull(card);
     }
 }
