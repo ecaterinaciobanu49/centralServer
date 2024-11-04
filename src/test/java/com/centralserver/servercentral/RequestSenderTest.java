@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -112,5 +113,46 @@ public class RequestSenderTest {
         Transaction transaction = RequestSender.getTransactionById(1L, PORT);
 
         Assertions.assertNotNull(transaction);
+    }
+
+    @Test
+    public void testAddNewLoan() throws IOException, InterruptedException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.YEAR, 10);
+        Customer customer = RequestSender.getCustomerBySubjectCode(CUSTOMER_CODE, PORT);
+        Loan loanToSave = new Loan(new Date(), calendar.getTime(), 10000d, 3, LoanStatus.ACTIVE, customer);
+        Loan loanFromDb = RequestSender.addNewLoan(loanToSave, PORT);
+
+        Assertions.assertNotNull(loanFromDb);
+    }
+
+    @Test
+    public void testRetrieveLoansForACustomer() throws IOException, InterruptedException {
+        List<Loan> loans = RequestSender.retrieveLoansForACustomer(CUSTOMER_CODE, PORT);
+
+        Assertions.assertEquals(loans.size(), 1);
+    }
+
+    @Test
+    public void testGetLoanById() throws IOException, InterruptedException {
+        Loan loan = RequestSender.getLoanById(1L, PORT);
+
+        Assertions.assertNotNull(loan);
+    }
+
+    @Test
+    public void testUpdateOutstandingAmount() throws IOException, InterruptedException {
+        Loan loan = RequestSender.updateOutstandingAmount(1L, 1000d, PORT);
+
+        Assertions.assertEquals(9000d, loan.getOutstandingAmount());
+    }
+
+    @Test
+    public void testCloseLoan() throws IOException, InterruptedException {
+        RequestSender.closeLoan(1L, PORT);
+        Loan loan = RequestSender.getLoanById(1L, PORT);
+
+        Assertions.assertEquals(LoanStatus.CLOSED, loan.getStatus());
     }
 }

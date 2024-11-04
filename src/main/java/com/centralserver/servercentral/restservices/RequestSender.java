@@ -2,6 +2,7 @@ package com.centralserver.servercentral.restservices;
 
 import com.centralserver.servercentral.models.Account;
 import com.centralserver.servercentral.models.Customer;
+import com.centralserver.servercentral.models.Loan;
 import com.centralserver.servercentral.models.Transaction;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -180,5 +181,70 @@ public class RequestSender {
                 .send(request, HttpResponse.BodyHandlers.ofString());
 
         return objectMapper.readValue(response.body(), Transaction.class);
+    }
+
+    public static Loan addNewLoan(Loan loan, String port) throws IOException, InterruptedException {
+        String requestBody = objectMapper.writeValueAsString(loan);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .uri(URI.create(LOCALHOST + port + POST_LOAN))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), Loan.class);
+    }
+
+    public static List<Loan> retrieveLoansForACustomer(String subjectCode, String port) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(LOCALHOST + port + GET_LOAN_BY_CUSTOMER + subjectCode))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), new TypeReference<List<Loan>>() {});
+    }
+
+    public static Loan getLoanById(Long loanId, String port) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(LOCALHOST + port + GET_LOAN_BY_ID + loanId))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), Loan.class);
+    }
+
+    public static Loan updateOutstandingAmount(Long loanId, Double balance, String port) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.ofString(String.valueOf(balance)))
+                .uri(URI.create(LOCALHOST + port + PUT_LOAN_AMOUNT + loanId))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), Loan.class);
+    }
+
+    public static void closeLoan(Long loanId, String port) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.noBody())
+                .uri(URI.create(LOCALHOST + port + PUT_LOAN_AMOUNT + loanId))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
     }
 }
