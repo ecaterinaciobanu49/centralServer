@@ -16,12 +16,12 @@ import java.util.List;
 public class RequestSenderTest {
 
     private static final String TEST_USER = "{\n" +
-            "  \"subjectCode\": \"CUST99887\",\n" +
-            "  \"lastname\": \"Williams\",\n" +
-            "  \"firstname\": \"Michael\",\n" +
-            "  \"email\": \"michaelwilliams@example.com\",\n" +
-            "  \"phone\": \"+12012345678\",\n" +
-            "  \"birthDate\": \"1988-11-25T08:20:00.000Z\"\n" +
+            "  \"subjectCode\": \"CUDAHFDD9988889\",\n" +
+            "  \"lastname\": \"William\",\n" +
+            "  \"firstname\": \"Misha\",\n" +
+            "  \"email\": \"mishawilliams@example.com\",\n" +
+            "  \"phone\": \"+12012345688\",\n" +
+            "  \"birthDate\": \"1988-11-26T08:20:00.000Z\"\n" +
             "}\n";
 
     private static final String CUSTOMER_CODE = "CUST99887";
@@ -30,11 +30,11 @@ public class RequestSenderTest {
     private static final String PORT = "8080";
     private static final String CARD_NUMBER = "1234567898765412";
     @Test
-    public void testAddNewCustomer() throws IOException, InterruptedException {
+    public void testAddNewCustomer() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         Customer customer = RequestSender.createNewCustomer(objectMapper.readValue(TEST_USER, Customer.class), "8080");
 
-        Assertions.assertEquals("Michael", customer.getFirstname());
+        Assertions.assertEquals("Misha", customer.getFirstname());
     }
 
     @Test
