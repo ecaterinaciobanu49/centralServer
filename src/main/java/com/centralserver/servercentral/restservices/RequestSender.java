@@ -72,7 +72,7 @@ public class RequestSender {
         }
     }
 
-    public void deleteCustomer(String subjectCode, String port) {
+    public static boolean deleteCustomer(String subjectCode, String port) {
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -84,8 +84,9 @@ public class RequestSender {
             HttpResponse<String> response = HttpClient.newHttpClient()
                     .send(request, HttpResponse.BodyHandlers.ofString());
 
+            return true;
         } catch (IOException | InterruptedException e) {
-            //ignore
+            return false;
         }
     }
 
@@ -160,7 +161,7 @@ public class RequestSender {
         }
     }
 
-    public static void closeAccount(String accountNumber, String port) {
+    public static boolean closeAccount(String accountNumber, String port) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .PUT(HttpRequest.BodyPublishers.noBody())
@@ -170,7 +171,9 @@ public class RequestSender {
 
             HttpResponse<String> response = HttpClient.newHttpClient()
                     .send(request, HttpResponse.BodyHandlers.ofString());
+            return true;
         } catch (IOException | InterruptedException ignored) {
+            return false;
         }
     }
 
@@ -300,7 +303,7 @@ public class RequestSender {
         }
     }
 
-    public static void closeLoan(Long loanId, String port) {
+    public static boolean closeLoan(Long loanId, String port) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .PUT(HttpRequest.BodyPublishers.noBody())
@@ -311,7 +314,9 @@ public class RequestSender {
             HttpResponse<String> response = HttpClient.newHttpClient()
                     .send(request, HttpResponse.BodyHandlers.ofString());
 
+            return true;
         } catch (IOException | InterruptedException ignored) {
+            return false;
         }
     }
 
